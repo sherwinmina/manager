@@ -3,7 +3,7 @@ import { Text } from 'react-native';
 import { connect } from 'react-redux';
 
 import { emailChanged, passwordChanged, loginUser } from '../actions';
-import { Card, CardSection, Input, Button } from './common';
+import { Card, CardSection, Input, Button, Spinner } from './common';
 
 class LoginForm extends Component {
 onEmailChange(text) {
@@ -19,6 +19,19 @@ onButtonPress() {
 
   this.props.loginUser({ email, password });
 }
+
+renderButton() {
+  if (this.props.loading) {
+    return <Spinner />;
+  }
+
+  return (
+     <Button onPress={this.onButtonPress.bind(this)}>
+      Log In
+     </Button>
+  );
+}
+
   render() {
     return (
       <Card> 
@@ -46,9 +59,7 @@ onButtonPress() {
           </Text>
 
         <CardSection>
-          <Button onPress={this.onButtonPress.bind(this)}>
-            Log In
-          </Button>
+          {this.renderButton()}
         </CardSection> 
       </Card>
     );
@@ -64,9 +75,9 @@ const styles = {
 };
 
 const mapStateToProps = ({ auth }) => { 
-  const { email, password, error } = auth;
+  const { email, password, error, loading } = auth;
 
-  return { email, password, error };
+  return { email, password, error, loading };
 };
 
 export default connect(mapStateToProps, { 
